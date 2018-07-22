@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Lance&#39;blog">
+<meta property="og:url" content="https://www.xiwei.me/page/2/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lance&#39;blog">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-RabbitMQ工作模式与示例-一" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/12/01/RabbitMQ工作模式与示例-一/">RabbitMQ工作模式与示例(一)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/12/01/RabbitMQ工作模式与示例-一/" class="article-date">
+  <time datetime="2012-12-01T09:03:07.000Z" itemprop="datePublished">2012-12-01</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://static.yexiwei.com/wp-content/uploads/2012/12/1AE02B9AEE4C25FDA5A78996DCEFCBCC020ACD05049E_362_154.png" alt=""></p>
+<h4 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h4><ul>
+<li>channel:通道，amqp支持一个tcp连接上启用多个mq通信通道，每个通道都可以被作为通信流。</li>
+<li>producer：生产者，是消息产生的源头。</li>
+<li>exchange：交换机，可以理解为具有路由表的路由规则。</li>
+<li>queues：队列，装载消息的缓存容器。</li>
+<li>consumer：消费者，连接到队列并取走消息的客户端。<h4 id="核心思想："><a href="#核心思想：" class="headerlink" title="核心思想："></a>核心思想：</h4>在RabbitMQ中，生产者从不直接将消息发送给队列。<br>事实上，有些生产者甚至不知道消息是否被送到某个队列中去了。生产者只负责将消息送给交换机，而交换机确切地知道什么消息应该送到哪。<br>bind：绑定，实际上可以理解为交换机的路由规则。每个消息都有一个称为路由键的属性(routing key)，就是一个简单的字符串。一个绑定将【交换机，路由键，消息送达队列】三者绑定在一起，形成一条路由规则。<br>exchange type：交换机类型：</li>
+</ul>
+<ol>
+<li>fanout：不处理路由键，转发到所有绑定的队列上</li>
+<li>direct：处理路由键，必须完全匹配，即路由键字符串相同才会转发</li>
+<li>topic：路由键模式匹配，此时队列需要绑定要一个模式上。符号“#”匹配一个或多个词，符号“<em>”匹配不多不少一个词。因此“audit.#”能够匹配到“audit.irs.corporate”，但是“audit.</em>” 只会匹配到“audit.irs”
+        
+          <p class="article-more-link">
+            <a href="/2012/12/01/RabbitMQ工作模式与示例-一/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-RabbitMQ工作模式与示例-二" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/12/01/RabbitMQ工作模式与示例-二/">RabbitMQ工作模式与示例(二)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/12/01/RabbitMQ工作模式与示例-二/" class="article-date">
+  <time datetime="2012-12-01T09:00:26.000Z" itemprop="datePublished">2012-12-01</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://static.yexiwei.com/wp-content/uploads/2012/12/F24833E55C4DABB1F06536F6D7F7D34270E33C05049E_524_174.jpeg" alt=""><br>示例2中，交换机被配置为direct路由方式，它将根据bind路由信息将特定的路由键信息送至对应的队列中。<br>生产者只负责将信息发送到交换机，而不关心交换机是如何配置的。从代码中可以看出这一点。<br>
+        
+          <p class="article-more-link">
+            <a href="/2012/12/01/RabbitMQ工作模式与示例-二/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-RabbitMQ工作模式与示例-三" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/12/01/RabbitMQ工作模式与示例-三/">RabbitMQ工作模式与示例(三)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/12/01/RabbitMQ工作模式与示例-三/" class="article-date">
+  <time datetime="2012-12-01T08:56:35.000Z" itemprop="datePublished">2012-12-01</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>示例3中的交换机使用了topic模式，这种模式下交换机会试图将消息的路由键与规则进行模式匹配。<br>模式中，符号‘#’匹配一个或多个词，符号‘<em>’匹配不多于一个词。<br>如‘#’可匹配到(a.b) (a.b.c)  (b.c) ，即所有路由键<br>而‘a.</em>’可匹配到(a.b)<br>
+        
+          <p class="article-more-link">
+            <a href="/2012/12/01/RabbitMQ工作模式与示例-三/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/02/14/整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程/">整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/02/14/整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程/" class="article-date">
+  <time datetime="2012-02-14T09:18:25.000Z" itemprop="datePublished">2012-02-14</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>环境说明：<br>CentOS 6 64bit Mini最小化安装<br>MongoDB 1.8.2<br>Nginx 1.0.5<br>本文将用费覆盖方式安装Nginx的扩展Nginx-Gridfs<br>Nginx的Nginx-Gridfs扩展地址：<a href="https://github.com/mdirolf/nginx-gridfs" target="_blank" rel="noopener">https://github.com/mdirolf/nginx-gridfs</a><br>可以使用wget下载，但是这个源码中海链接着其它源码，所有用git方法下载最方便，如果没有安装git的话按下面的步骤来<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">查看git包的信息</span><br><span class="line">[root@vm ~]<span class="comment"># yum info git</span></span><br><span class="line">**这里省略了不大重要的信息**</span><br><span class="line">Available Packages</span><br><span class="line">Name       : git</span><br><span class="line">Arch       : x86_64</span><br><span class="line">Version    : 1.7.1</span><br><span class="line">Release    : 2.el6_0.1</span><br><span class="line">Size       : 4.6 M</span><br><span class="line">Repo       : updates</span><br><span class="line">Summary    : Fast Version Control System</span><br><span class="line">URL        : http://git-scm.com/</span><br><span class="line">License    : GPLv2</span><br><span class="line">Description: Git is a fast, scalable, distributed revision control system with</span><br><span class="line">           : an unusually rich <span class="built_in">command</span> <span class="built_in">set</span> that provides both high-level</span><br><span class="line">           : operations and full access to internals.</span><br><span class="line">           :</span><br><span class="line">           : The git rpm installs the core tools with minimal dependencies.  To</span><br><span class="line">           : install all git packages, including tools <span class="keyword">for</span> integrating with</span><br><span class="line">           : other SCMs, install the git-all meta-package.</span><br><span class="line"><span class="comment">#安装git包</span></span><br><span class="line">[root@vm ~]<span class="comment"># yum -y install git</span></span><br></pre></td></tr></table></figure></p>
+<p>Ok，git工具安装完成，下一步下载nginx-gridfs源码包<br>
+        
+          <p class="article-more-link">
+            <a href="/2012/02/14/整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-MongodbGridFS文件存储" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/02/14/MongodbGridFS文件存储/">Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/02/14/MongodbGridFS文件存储/" class="article-date">
+  <time datetime="2012-02-14T09:11:09.000Z" itemprop="datePublished">2012-02-14</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="一、命令行操作："><a href="#一、命令行操作：" class="headerlink" title="一、命令行操作："></a>一、命令行操作：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:Userslwx&gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db <span class="built_in">test</span> -t png</span><br></pre></td></tr></table></figure>
+<p>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C:Userslwx&gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db <span class="built_in">test</span> -t <span class="string">"image/png"</span></span><br><span class="line">connected to: 192.168.20.64</span><br><span class="line">added file: &#123; _id: ObjectId(<span class="string">'4e3a274aad9bf748d735e8d7'</span>), filename: <span class="string">"D:/www/health.png"</span>, chunkSize: 262144, uploadDate: new Date(1312433994910), md5: <span class="string">"34cb91d3ebc40c314f4be</span></span><br><span class="line"><span class="string">e23d57112fd"</span>, length: 826796, contentType: <span class="string">"image/png"</span> &#125;</span><br><span class="line"><span class="keyword">done</span>!</span><br></pre></td></tr></table></figure></p>
+<p>contentType:”image/png” 就是-t参数传递的值<br>
+        
+          <p class="article-more-link">
+            <a href="/2012/02/14/MongodbGridFS文件存储/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SSH密钥登录让LinuxVPS-服务器更安全" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/">SSH密钥登录让Linux VPS/服务器更安全</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/" class="article-date">
+  <time datetime="2011-02-24T09:30:48.000Z" itemprop="datePublished">2011-02-24</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>随着PHP越来越流行，Linux VPS/服务器的使用也越来越多，Linux的安全问题也需要日渐加强，如果你安装过DenyHosts并设置过邮件提醒，你每天可能会受到数封DenyHosts Report将前来破解SSH密码的IP加入/etc/hosts.deny。<br>Linux SSH登录有两种：</p>
+<h5 id="1、使用密码验证登录"><a href="#1、使用密码验证登录" class="headerlink" title="1、使用密码验证登录"></a>1、使用密码验证登录</h5><p>通常VPS或服务器开通后都是直接提供IP和root密码，使用这种方式就是通过密码方式登录。如果密码不够强壮，而且没有安装DenyHosts之类的防止SSH密码破解的软件，那么系统安全将存在很大的隐患。</p>
+<h6 id="2、使用密钥验证登录"><a href="#2、使用密钥验证登录" class="headerlink" title="2、使用密钥验证登录"></a>2、使用密钥验证登录</h6><p>基于密钥的安全验证必须为用户自己创建一对密钥，并把共有的密钥放在需要访问的服务器上。当需要连接到SSH服务器上时，客户端软件就会向服务器发出请求，请求使用客户端的密钥进行安全验证。服务器收到请求之后，先在该用户的根目录下寻找共有密钥，然后把它和发送过来的公有密钥进行比较。如果两个密钥一致，服务器就用公有的密钥加密“质询”，并把它发送给客户端软件（putty,xshell等）。客户端收到质询之后，就可以用本地的私人密钥解密再把它发送给服务器，这种方式是相当安全的。<br>
+        
+          <p class="article-more-link">
+            <a href="/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    </nav>
+  
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

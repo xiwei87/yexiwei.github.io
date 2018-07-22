@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程 | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="环境说明：CentOS 6 64bit Mini最小化安装MongoDB 1.8.2Nginx 1.0.5本文将用费覆盖方式安装Nginx的扩展Nginx-GridfsNginx的Nginx-Gridfs扩展地址：https://github.com/mdirolf/nginx-gridfs可以使用wget下载，但是这个源码中海链接着其它源码，所有用git方法下载最方便，如果没有安装git的话按下">
+<meta name="keywords" content="mongo,nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程">
+<meta property="og:url" content="https://www.xiwei.me/2012/02/14/整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="环境说明：CentOS 6 64bit Mini最小化安装MongoDB 1.8.2Nginx 1.0.5本文将用费覆盖方式安装Nginx的扩展Nginx-GridfsNginx的Nginx-Gridfs扩展地址：https://github.com/mdirolf/nginx-gridfs可以使用wget下载，但是这个源码中海链接着其它源码，所有用git方法下载最方便，如果没有安装git的话按下">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.725Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程">
+<meta name="twitter:description" content="环境说明：CentOS 6 64bit Mini最小化安装MongoDB 1.8.2Nginx 1.0.5本文将用费覆盖方式安装Nginx的扩展Nginx-GridfsNginx的Nginx-Gridfs扩展地址：https://github.com/mdirolf/nginx-gridfs可以使用wget下载，但是这个源码中海链接着其它源码，所有用git方法下载最方便，如果没有安装git的话按下">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/02/14/整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程/" class="article-date">
+  <time datetime="2012-02-14T09:18:25.000Z" itemprop="datePublished">2012-02-14</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>环境说明：<br>CentOS 6 64bit Mini最小化安装<br>MongoDB 1.8.2<br>Nginx 1.0.5<br>本文将用费覆盖方式安装Nginx的扩展Nginx-Gridfs<br>Nginx的Nginx-Gridfs扩展地址：<a href="https://github.com/mdirolf/nginx-gridfs" target="_blank" rel="noopener">https://github.com/mdirolf/nginx-gridfs</a><br>可以使用wget下载，但是这个源码中海链接着其它源码，所有用git方法下载最方便，如果没有安装git的话按下面的步骤来<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">查看git包的信息</span><br><span class="line">[root@vm ~]<span class="comment"># yum info git</span></span><br><span class="line">**这里省略了不大重要的信息**</span><br><span class="line">Available Packages</span><br><span class="line">Name       : git</span><br><span class="line">Arch       : x86_64</span><br><span class="line">Version    : 1.7.1</span><br><span class="line">Release    : 2.el6_0.1</span><br><span class="line">Size       : 4.6 M</span><br><span class="line">Repo       : updates</span><br><span class="line">Summary    : Fast Version Control System</span><br><span class="line">URL        : http://git-scm.com/</span><br><span class="line">License    : GPLv2</span><br><span class="line">Description: Git is a fast, scalable, distributed revision control system with</span><br><span class="line">           : an unusually rich <span class="built_in">command</span> <span class="built_in">set</span> that provides both high-level</span><br><span class="line">           : operations and full access to internals.</span><br><span class="line">           :</span><br><span class="line">           : The git rpm installs the core tools with minimal dependencies.  To</span><br><span class="line">           : install all git packages, including tools <span class="keyword">for</span> integrating with</span><br><span class="line">           : other SCMs, install the git-all meta-package.</span><br><span class="line"><span class="comment">#安装git包</span></span><br><span class="line">[root@vm ~]<span class="comment"># yum -y install git</span></span><br></pre></td></tr></table></figure></p>
+<p>Ok，git工具安装完成，下一步下载nginx-gridfs源码包<br><a id="more"></a></p>
+<h4 id="一、安装nginx-gridfs扩展"><a href="#一、安装nginx-gridfs扩展" class="headerlink" title="一、安装nginx-gridfs扩展"></a>一、安装nginx-gridfs扩展</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@vm ~]<span class="comment"># git clone https://github.com/mdirolf/nginx-gridfs.git</span></span><br><span class="line">[root@vm ~]<span class="comment"># cd nginx-gridfs</span></span><br><span class="line">[root@vm nginx-gridfs]<span class="comment"># git submodule init</span></span><br><span class="line">[root@vm nginx-gridfs]<span class="comment"># git submodule update</span></span><br><span class="line">//进入我的nginx1.0.5的源码目录编译安装nginx-gridfs扩展</span><br><span class="line">[root@vm nginx-gridfs]<span class="comment"># cd /root/nginx-1.0.5</span></span><br><span class="line">//编译前先查看现有的nginx的编译参数配置</span><br><span class="line">[root@vm nginx-1.0.5]<span class="comment">#/usr/local/nginx/sbin/nginx -V nginx: nginx version: nginx/1.0.5</span></span><br><span class="line">nginx: TLS SNI support disabled</span><br><span class="line">nginx: configure arguments: --user=www --group=www --prefix=/usr/<span class="built_in">local</span>/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-ipv6 </span><br><span class="line">//编译配置在原有配置基础上增加新的扩展（蓝色部分）</span><br><span class="line">[root@vm nginx-1.0.5]<span class="comment"># ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-ipv6 &lt;strong&gt;--add-module=/root/nginx-gridfs&lt;/strong&gt;</span></span><br><span class="line">[root@vm nginx-1.0.5]<span class="comment"># make</span></span><br><span class="line">[root@vm nginx-1.0.5]<span class="comment"># make install</span></span><br></pre></td></tr></table></figure>
+<p>Nginx的nginx-gridfs扩展模块安装完成，检查一下吧<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@vm nginx-1.0.5]<span class="comment"># /usr/local/nginx/sbin/nginx -V</span></span><br><span class="line">nginx: nginx version: nginx/1.0.5</span><br><span class="line">nginx: built by gcc 4.4.4 20100726 (Red Hat 4.4.4-13) (GCC)</span><br><span class="line">nginx: TLS SNI support enabled</span><br><span class="line">nginx: configure arguments: --user=www --group=www --prefix=/usr/<span class="built_in">local</span>/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-ipv6 --add-module=/root/nginx-gridfs</span><br></pre></td></tr></table></figure></p>
+<h5 id="二、在Nginx中配置nginx-gridfs"><a href="#二、在Nginx中配置nginx-gridfs" class="headerlink" title="二、在Nginx中配置nginx-gridfs"></a>二、在Nginx中配置nginx-gridfs</h5><p>配置语法说明：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gridfs DB_NAME [root_collection=ROOT] [field=QUERY_FIELD] [<span class="built_in">type</span>=QUERY_TYPE] [user=USERNAME] [pass=PASSWORD]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>gridfs 表示告诉nginx服务器要调用gridfs模块</li>
+<li>root_collection= 指定Gridfs collection的前缀. 默认: fs</li>
+<li>field= 指定用于查询的字段 可以是 _id 和 filename. 默认: _id</li>
+<li>type= 指定查询的类型，这里支持 objectid, string 和int. 默认: objectid</li>
+<li>user= 指定数据库的用户名. 默认: NULL</li>
+<li>pass= 指定数据库的密码. 默认: NULL<br>Nginx配置文件中的具体写法：<br>/usr/local/nginx/conf/nginx.conf<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#方法1：</span></span><br><span class="line">location /static/ &#123;</span><br><span class="line">             gridfs ebook; <span class="comment">#指定db 为ebook，其它均为默认，默认服务器为本地</span></span><br><span class="line">&#125;</span><br><span class="line">方法2：</span><br><span class="line">location /static/ &#123;</span><br><span class="line">        gridfs ebook</span><br><span class="line">               field=filename</span><br><span class="line">               <span class="built_in">type</span>=string;</span><br><span class="line">        mongo 127.0.0.1:27017;</span><br><span class="line">&#125;</span><br><span class="line">方法3，用于副本集：</span><br><span class="line">location /static/ &#123;</span><br><span class="line">         gridfs ebook;</span><br><span class="line">                field=filename</span><br><span class="line">                <span class="built_in">type</span>=string;</span><br><span class="line">         mongo <span class="string">"foo"</span></span><br><span class="line">                192.168.1.60:27017</span><br><span class="line">                192.168.1.61:27017;</span><br><span class="line">&#125;</span><br><span class="line">方法4，这种是一个完整参数的配置例子 </span><br><span class="line">location /static/ &#123;</span><br><span class="line">    gridfs ebook</span><br><span class="line">           root_collection=book</span><br><span class="line">           field=_id</span><br><span class="line">           <span class="built_in">type</span>=int</span><br><span class="line">           user=admin</span><br><span class="line">           pass=admin;</span><br><span class="line">    mongo 127.0.0.1:27017;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>*以上方法中 换行不是必要，仅仅是为了看的清晰,我的一个完整的配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">	listen       80;</span><br><span class="line">	server_name static.ebook.vm6;</span><br><span class="line"></span><br><span class="line">	location /</span><br><span class="line">		&#123;</span><br><span class="line">			gridfs ebook</span><br><span class="line">			field=filename</span><br><span class="line">			<span class="built_in">type</span>=string;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	log_format  static.ebook.vm6  <span class="string">'$remote_addr - $remote_user [$time_local] $request '</span></span><br><span class="line">		 <span class="string">'$status $body_bytes_sent $http_referer '</span></span><br><span class="line">		 <span class="string">'$http_user_agent $http_x_forwarded_for'</span>;</span><br><span class="line">	access_log  /home/wwwlogs/static.ebook.vm6.log  static.ebook.vm6;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注:在测试配置时要记住不要将nginx的文件过期缓存时间配置开启了，最好是在配置好服务器后再做这个工作，否则很容易造成配置错误的假象。我在配置过程用就遇到了这样的问题<br>到这里你也许可以正常使用Nginx-Gridfs了，其实不然。<br>当你重新启动系统后你会发现用浏览器访问服务器上的web站点没有响应，这是因为系统启动过程中Nginx启动比MongoDB早，它初始化的时候不能正确链接MongoDB数据库。<br>了解关于CentOS的守护进程启动顺序相关的解释可以看看百度百科的这篇文章：<a href="http://wenku.baidu.com/view/f13befcfa1c7aa00b52acb40.html" target="_blank" rel="noopener">http://wenku.baidu.com/view/f13befcfa1c7aa00b52acb40.html</a><br>查看启动顺序：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@vm ~]<span class="comment"># ls /etc/rc3.d</span></span><br><span class="line">K10saslauthd   K86cgred        S02lvm2-monitor  S11auditd        S25netfs      S55sshd    S90crond</span><br><span class="line">K50netconsole  K87restorecond  S08ip6tables     S12rsyslog       S26udev-post  S64mysql     S99local</span><br><span class="line">K74ntpd        K89rdisc        S08iptables      S22messagebus    S50php-fpm    S80postfix</span><br><span class="line">K75ntpdate     K95cgconfig     S10network       S24avahi-daemon  S55nginx      S85mongod</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@vm ~]<span class="comment"># ls /etc/rc5.d</span></span><br><span class="line">K10saslauthd   K86cgred        S02lvm2-monitor  S11auditd        S25netfs      S55sshd    S90crond</span><br><span class="line">K50netconsole  K87restorecond  S08ip6tables     S12rsyslog       S26udev-post  S64mysql     S99local</span><br><span class="line">K74ntpd        K89rdisc        S08iptables      S22messagebus    S50php-fpm    S80postfix</span><br><span class="line">K75ntpdate     K95cgconfig     S10network       S24avahi-daemon  S55nginx      S85mongod</span><br></pre></td></tr></table></figure>
+<p>这些都是链接到/etc/init.d/目录里的相应守护进程启动脚本<br>S55nginx 意思是nginx守护进程启动顺序为55<br>S85mongod 意思是mongod守护进程的启动顺序是85，问题就在这mongod比nginx晚启动<br>修改启动顺序，将mongod的启动顺序值改为比nginx小的数<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@vm ~]<span class="comment"># mv /etc/rc3.d/S85mongod /etc/rc3.d/S54mongod</span></span><br><span class="line">[root@vm ~]<span class="comment"># mv /etc/rc5.d/S85mongod /etc/rc5.d/S54mongod</span></span><br></pre></td></tr></table></figure></p>
+<p>ok，现在reboot重启下看看是不是问题已经不存在了！</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/12/01/RabbitMQ工作模式与示例-三/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RabbitMQ工作模式与示例(三)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/02/14/MongodbGridFS文件存储/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

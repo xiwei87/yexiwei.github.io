@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Lance&#39;blog">
+<meta property="og:url" content="https://www.xiwei.me/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lance&#39;blog">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-自旋锁使用规则" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/01/11/自旋锁使用规则/">自旋锁使用规则</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2015/01/11/自旋锁使用规则/" class="article-date">
+  <time datetime="2015-01-11T15:12:47.000Z" itemprop="datePublished">2015-01-11</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>获得自旋锁和释放自旋锁有好几个版本，因此让读者知道在什么样的情况下使用什么版本的获得和释放锁的宏是非常必要的。<br>如果被保护的共享资源只在进程上下文访问和软中断（包括tasklet、timer）上下文访问，那么当在进程上下文访问共享资源时，可能被软中断打断， 从而可能进入软中断上下文来对被保护的共享资源访问，因此对于这种情况，对共享资源的访问必须使用spin_lock_bh和 spin_unlock_bh来保护。当然使用spin_lock_irq和spin_unlock_irq以及spin_lock_irqsave和 spin_unlock_irqrestore也可以，它们失效了本地硬中断，失效硬中断隐式地也失效了软中断。但是使用spin_lock_bh和 spin_unlock_bh是最恰当的，它比其他两个快。<br>
+        
+          <p class="article-more-link">
+            <a href="/2015/01/11/自旋锁使用规则/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-HTTPS详解" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/08/01/HTTPS详解/">HTTPS详解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2014/08/01/HTTPS详解/" class="article-date">
+  <time datetime="2014-08-01T15:26:03.000Z" itemprop="datePublished">2014-08-01</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我们都知道HTTPS能够加密信息，以免敏感信息被第三方获取。所以很多银行网站或电子邮箱等等安全级别较高的服务都会采用HTTPS协议。</p>
+<h3 id="HTTPS简介"><a href="#HTTPS简介" class="headerlink" title="HTTPS简介"></a>HTTPS简介</h3><p>HTTPS其实是有两部分组成：HTTP + SSL / TLS，也就是在HTTP上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过TLS进行加密，所以传输的数据都是加密后的数据。具体是如何进行加密，解密，验证的，且看下图<br><img src="https://static.yexiwei.com/wp-content/uploads/2014/08/https.png" alt=""><br>
+        
+          <p class="article-more-link">
+            <a href="/2014/08/01/HTTPS详解/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-NginxLua" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/08/01/NginxLua/">Nginx Lua</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2014/08/01/NginxLua/" class="article-date">
+  <time datetime="2014-07-31T16:05:15.000Z" itemprop="datePublished">2014-08-01</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1. 介绍"></a>1.1. 介绍</h3><p>ngx_lua – 把lua语言嵌入nginx中,使其支持lua来快速开发基于nginx下的业务逻辑<br>该模块不在nginx源码包中，需自行下载编译安装。使用lua 5.1（目前不支持lua 5.2） 或 luajit 2.0 。<br>添加lua支持后，开发复杂的模块，周期快，依然是100%异步非阻塞。<br>ngx_lua 哪些人在用:<br>淘宝、腾讯财经、网易财经、360、去哪儿网等<br>CloudFlare, CNN, Wingify, Reblaze, Turner, Broadcasting System<br>该项目主要开发者：<br>chaoslawful Taobao, Alibaba Grp.<br>agentzh CloudFlare<br><a href="https://github.com/chaoslawful/lua-nginx-module" target="_blank" rel="noopener">https://github.com/chaoslawful/lua-nginx-module</a><br>
+        
+          <p class="article-more-link">
+            <a href="/2014/08/01/NginxLua/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-移动推送技术" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2013/09/08/移动推送技术/">移动推送技术（Push Notification</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2013/09/08/移动推送技术/" class="article-date">
+  <time datetime="2013-09-07T16:29:32.000Z" itemprop="datePublished">2013-09-08</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1-BB，Nokia，Palm都先后支持了Push，目前流行的Push方式有三种。"><a href="#1-BB，Nokia，Palm都先后支持了Push，目前流行的Push方式有三种。" class="headerlink" title="1.BB，Nokia，Palm都先后支持了Push，目前流行的Push方式有三种。"></a>1.BB，Nokia，Palm都先后支持了Push，目前流行的Push方式有三种。</h4><p>(1)短信触发：2G时代长时间的数据连接会影响电话接入的可靠性，所以Pushmail用短信的方式触发。推过来一个看不到的短信，让系统去连接邮件服务器。<br>(2)长连接心跳查询：3G时代，语音和数据分离，手机长时间的保持网络连接成为可能。于是可以建立一个连接，设定一定时间间隔，让手机不断的检查服务器的邮件。</p>
+<h4 id="2-iPhone推送通知的工作机制可以简单的概括为下图：Provider是指某个iPhone软件的Push服务器，APNS-是Apple-Push-Notification-Service（Apple-Push服务器）。"><a href="#2-iPhone推送通知的工作机制可以简单的概括为下图：Provider是指某个iPhone软件的Push服务器，APNS-是Apple-Push-Notification-Service（Apple-Push服务器）。" class="headerlink" title="2.iPhone推送通知的工作机制可以简单的概括为下图：Provider是指某个iPhone软件的Push服务器，APNS 是Apple Push Notification Service（Apple Push服务器）。"></a>2.iPhone推送通知的工作机制可以简单的概括为下图：Provider是指某个iPhone软件的Push服务器，APNS 是Apple Push Notification Service（Apple Push服务器）。</h4><p><img src="https://static.yexiwei.com/wp-content/uploads/2013/09/08153649_eYDi.gif.jpg" alt=""><br>(1)、Provider: 用来向APNS发送消息<br>(2)、APNS: Apple_Push_Notification_Service 苹果消息推送服务器<br>(3)、iphone:用来接受APNS下发下来的消息推送<br>(4)、Client App: 安装在iphone上面的程序 （用来接收iphone传递APNS下发的消息到制定的一个客户端 app）<br>iPhone在开启Push的时候，会连接 APNS建立一条TLS加密链接。每一台正常的iPhone都有一个独有的设备证书，而APNS也有一个服务器证书。两者建立的时候，会验证彼此的证书有效性。<br>TLS链接一旦建立，在没有数据的情况下，只需要每隔15分钟进行一次保活的握手，因此几乎不占流量。而一旦因为意外原因导致链接中断，iPhone会不断重新尝试建立TLS链接，直到成功。</p>
+<p>####3.苹果为软件开发者们提供了三种信息提醒方式：显示警告框，播放自定义声音，更新应用程序标志。<br>应用程序长时间后台运行，会过度消耗电能是使用推送通知的最大的缘由。<br>苹果并不保证推送通知的到达及顺序。<br>APNS和iPhone手机间的消息使用json格式，并且每条消息最大为256字节。<br>iPhone收到推送请求后，执行一系列检查，如果客户端程序在运行，它会通过应用程序委托将消息发送到应用程序，如果没有运行，它会执行警告，显示文本，播放声音或更新标志。<br>推送提供商必须提供安全套接字层认证，和令牌，标识要通知的手机和应用程序。<br>APNS反馈服务列出未能接收到通知的设备。<br>在GuidesLocal and Push Notification Programming Guide 中查有关推送通知的文档。</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Python调用C-C-函数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2013/06/27/Python调用C-C-函数/">Python调用C/C++函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2013/06/27/Python调用C-C-函数/" class="article-date">
+  <time datetime="2013-06-27T08:43:14.000Z" itemprop="datePublished">2013-06-27</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Python是一门功能强大的高级脚本语言，它的强大不仅表现在其自身的功能上，而且还表现在其良好的可扩展性上，正因如此，Python已经开始受到越来越多人的青睐，并且被屡屡成功地应用于各类大型软件系统的开发过程中。<br>与其它普通脚本语言有所不同，Python程序员可以借助Python语言提供的API，使用C或者C++来对Python进行功能性扩展，从而即可以利用Python方便灵活的语法和功能，又可以获得与C或者C++几乎相同的执行性能。执行速度慢是几乎所有脚本语言都具有的共性，也是倍受人们指责的一个重要因素，Python则通过与C语言的有机结合巧妙地解决了这一问题，从而使脚本语言的应用范围得到了很大扩展。<br>
+        
+          <p class="article-more-link">
+            <a href="/2013/06/27/Python调用C-C-函数/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-CentOS6-3源码安装Percona5-5-30" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2013/04/18/CentOS6-3源码安装Percona5-5-30/">CentOS6.3源码安装Percona5.5.30</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2013/04/18/CentOS6-3源码安装Percona5-5-30/" class="article-date">
+  <time datetime="2013-04-18T08:51:30.000Z" itemprop="datePublished">2013-04-18</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Percona 为 MySQL 数据库服务器进行了改进，在功能和性能上较 MySQL 有着很显著的提升。该版本提升了在高负载情况下的 InnoDB 的性能、为 DBA 提供一些非常有用的性能诊断工具；另外有更多的参数和命令来控制服务器行为。<br>Percona（mysql）从5.5版本开始，不再使用./configure编译，而是使用cmake编译器，具体的cmake编译参数可以参考mysql官网文档,(※ 非常重要)<br><a href="http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html</a><br>
+        
+          <p class="article-more-link">
+            <a href="/2013/04/18/CentOS6-3源码安装Percona5-5-30/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
+  
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>SSH密钥登录让Linux VPS/服务器更安全 | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="随着PHP越来越流行，Linux VPS/服务器的使用也越来越多，Linux的安全问题也需要日渐加强，如果你安装过DenyHosts并设置过邮件提醒，你每天可能会受到数封DenyHosts Report将前来破解SSH密码的IP加入/etc/hosts.deny。Linux SSH登录有两种： 1、使用密码验证登录通常VPS或服务器开通后都是直接提供IP和root密码，使用这种方式就是通过密码方式">
+<meta name="keywords" content="linux,vps">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH密钥登录让Linux VPS&#x2F;服务器更安全">
+<meta property="og:url" content="https://www.xiwei.me/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="随着PHP越来越流行，Linux VPS/服务器的使用也越来越多，Linux的安全问题也需要日渐加强，如果你安装过DenyHosts并设置过邮件提醒，你每天可能会受到数封DenyHosts Report将前来破解SSH密码的IP加入/etc/hosts.deny。Linux SSH登录有两种： 1、使用密码验证登录通常VPS或服务器开通后都是直接提供IP和root密码，使用这种方式就是通过密码方式">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-1.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-2.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-3.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-4.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-export-ppk.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-1.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-2.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-3.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-new-session-1.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-new-session-2.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-select-session.jpg">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-login1.jpg">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.724Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSH密钥登录让Linux VPS&#x2F;服务器更安全">
+<meta name="twitter:description" content="随着PHP越来越流行，Linux VPS/服务器的使用也越来越多，Linux的安全问题也需要日渐加强，如果你安装过DenyHosts并设置过邮件提醒，你每天可能会受到数封DenyHosts Report将前来破解SSH密码的IP加入/etc/hosts.deny。Linux SSH登录有两种： 1、使用密码验证登录通常VPS或服务器开通后都是直接提供IP和root密码，使用这种方式就是通过密码方式">
+<meta name="twitter:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-1.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-SSH密钥登录让LinuxVPS-服务器更安全" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SSH密钥登录让Linux VPS/服务器更安全
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/" class="article-date">
+  <time datetime="2011-02-24T09:30:48.000Z" itemprop="datePublished">2011-02-24</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>随着PHP越来越流行，Linux VPS/服务器的使用也越来越多，Linux的安全问题也需要日渐加强，如果你安装过DenyHosts并设置过邮件提醒，你每天可能会受到数封DenyHosts Report将前来破解SSH密码的IP加入/etc/hosts.deny。<br>Linux SSH登录有两种：</p>
+<h5 id="1、使用密码验证登录"><a href="#1、使用密码验证登录" class="headerlink" title="1、使用密码验证登录"></a>1、使用密码验证登录</h5><p>通常VPS或服务器开通后都是直接提供IP和root密码，使用这种方式就是通过密码方式登录。如果密码不够强壮，而且没有安装DenyHosts之类的防止SSH密码破解的软件，那么系统安全将存在很大的隐患。</p>
+<h6 id="2、使用密钥验证登录"><a href="#2、使用密钥验证登录" class="headerlink" title="2、使用密钥验证登录"></a>2、使用密钥验证登录</h6><p>基于密钥的安全验证必须为用户自己创建一对密钥，并把共有的密钥放在需要访问的服务器上。当需要连接到SSH服务器上时，客户端软件就会向服务器发出请求，请求使用客户端的密钥进行安全验证。服务器收到请求之后，先在该用户的根目录下寻找共有密钥，然后把它和发送过来的公有密钥进行比较。如果两个密钥一致，服务器就用公有的密钥加密“质询”，并把它发送给客户端软件（putty,xshell等）。客户端收到质询之后，就可以用本地的私人密钥解密再把它发送给服务器，这种方式是相当安全的。<br><a id="more"></a></p>
+<h4 id="一、生成密钥"><a href="#一、生成密钥" class="headerlink" title="一、生成密钥"></a>一、生成密钥</h4><p>因为puttygen生成的密钥有问题可能会出现：“Server refused our key”，最好使用XShell生成密钥或者在远程Linux VPS/服务器生成密钥。</p>
+<h5 id="1、在Linux远程服务器生成密钥："><a href="#1、在Linux远程服务器生成密钥：" class="headerlink" title="1、在Linux远程服务器生成密钥："></a>1、在Linux远程服务器生成密钥：</h5><p>登录远程Linux  VPS/服务器，执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">root@vpser:~<span class="comment"># ssh-keygen -t rsa //先运行这个命令</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa):                   //直接回车</span><br><span class="line">Created directory ‘/root/.ssh’.</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):                                    //输入密钥密码</span><br><span class="line">Enter same passphrase again:                                                                 //重复密钥密码</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.         //提示公钥和私钥已经存放在/root/.ssh/目录下</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">15:23:a1:41:90:10:05:29:4c:d6:c0:11:61:13:23:dd root@vpser.net</span><br><span class="line">The key’s randomart image is:</span><br><span class="line">+–[ RSA 2048]—-+</span><br><span class="line">|=&amp;@Bo+o o.o      |</span><br><span class="line">|=o=.E  o . o     |</span><br><span class="line">| .    .   .      |</span><br><span class="line">|         .       |</span><br><span class="line">|        S        |</span><br><span class="line">|                 |</span><br><span class="line">|                 |</span><br><span class="line">|                 |</span><br><span class="line">|                 |</span><br><span class="line">+—————–+</span><br><span class="line">root@vpser:~<span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<p>将/root/.ssh/下面的id_rsa和id_rsd.pub妥善保存。</p>
+<h5 id="2、使用XShell生成密钥"><a href="#2、使用XShell生成密钥" class="headerlink" title="2、使用XShell生成密钥"></a>2、使用XShell生成密钥</h5><p>Xshell是一款Windows下面功能强大的SSH客户端，能够按分类保存N多会话、支持Tab、支持多密钥管理等等，管理比较多的VPS/服务器使用XShell算是比较方便的，推荐使用。<br>下载XShell，安装，运行XShell，点击菜单：Tool -&gt;User Key Generation Wizard，出现如下提示：<br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-1.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-2.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-3.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-4.jpg" alt=""><br>点击Save as file将密钥保存为id_rsa.pub。</p>
+<h4 id="二、将密钥添加到远程Linux服务器"><a href="#二、将密钥添加到远程Linux服务器" class="headerlink" title="二、将密钥添加到远程Linux服务器"></a>二、将密钥添加到远程Linux服务器</h4><ol>
+<li>用winscp，将id_rsa.pub文件上传到/root/.ssh/下面（如果没有则创建此目录），并重命名为：authorized_keys（如果是在Linux服务器上生成的密钥直接执行：mv /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys），再执行：chmod 600 /root/.ssh/authorized_keys 修改权限。</li>
+<li>修改/etc/ssh/sshd_config 文件，将RSAAuthentication 和 PubkeyAuthentication 后面的值都改成yes ，保存。</li>
+<li>重启sshd服务，Debian/Ubuntu执行/etc/init.d/ssh restart ；CentOS执行：/etc/init.d/sshd restart。<h4 id="三、客户端测试使用密钥登录"><a href="#三、客户端测试使用密钥登录" class="headerlink" title="三、客户端测试使用密钥登录"></a>三、客户端测试使用密钥登录</h4><h5 id="1、使用putty登录"><a href="#1、使用putty登录" class="headerlink" title="1、使用putty登录"></a>1、使用putty登录</h5>putty使用的私钥文件和Linux服务器或XShell的私钥格式不同，如果使用putty的话，需要将Linux主机上生成的id_rsa文件下载的本地。运行putty压缩包里面的puttygen.exe，选择Conversions-&gt;Import key选择私钥文件id_rsa，输入密钥文件的密码，会出现如下界面：<br>点击“Save Private Key”，将私钥保存为id_rsa.ppk<br>运行putty，在Host Name填写：root@主机名或ip<br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-export-ppk.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-1.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-2.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/putty-3.jpg" alt=""><br>如果设置了密钥密码，出现：Passphrase for key “imported-openssh-key”时输入密钥密码。<br>如果设置没问题就会登录成功，出现用户提示符。<h5 id="2、XShell登录"><a href="#2、XShell登录" class="headerlink" title="2、XShell登录"></a>2、XShell登录</h5>运行XShell，选择菜单File-&gt;New，按如下提示填写：<br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-new-session-1.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-new-session-2.jpg" alt=""><br>打开创建好的Session<br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-select-session.jpg" alt=""><br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-login1.jpg" alt=""><br>如果设置没问题就会登录成功，出现用户提示符。<h5 id="3、Linux客户端登录测试"><a href="#3、Linux客户端登录测试" class="headerlink" title="3、Linux客户端登录测试"></a>3、Linux客户端登录测试</h5>在Linux客户端执行：chmod 600 /root/id_rsa 再执行：ssh <a href="mailto:root@www.vpser.net" target="_blank" rel="noopener">root@www.vpser.net</a> -i /root/id_rsa /root/id_rsa为私钥文件，第一次链接可能会提示确认，输入yes即可，再按提示输入密钥密码，没有问题就会出现用户提示符。<h4 id="四、修改远程Linux服务器sshd服务配置"><a href="#四、修改远程Linux服务器sshd服务配置" class="headerlink" title="四、修改远程Linux服务器sshd服务配置"></a>四、修改远程Linux服务器sshd服务配置</h4><h5 id="1、修改-etc-ssh-sshd-config-文件"><a href="#1、修改-etc-ssh-sshd-config-文件" class="headerlink" title="1、修改/etc/ssh/sshd_config 文件"></a>1、修改/etc/ssh/sshd_config 文件</h5>将PasswordAuthentication yes 修改成 PasswordAuthentication no<h5 id="2、重启sshd服务"><a href="#2、重启sshd服务" class="headerlink" title="2、重启sshd服务"></a>2、重启sshd服务</h5>Debian/Ubuntu执行/etc/init.d/ssh restart ；CentOS执行：/etc/init.d/sshd restart。<br>ok，设置完成。<br>再提醒一下一定要保存好Putty私钥文件id_rsa.ppk或Linux服务器下载下来的id_rsa私钥文件。</li>
+</ol>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/02/14/MongodbGridFS文件存储/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2011/02/24/LinuxVPS上DenyHosts阻止SSH暴力攻击/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Linux VPS上DenyHosts阻止SSH暴力攻击</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方 | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、命令行操作：1C:Userslwx&amp;gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db test -t png 或者12345C:Userslwx&amp;gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db test -t &quot;image/png&quot;connected to: 192">
+<meta name="keywords" content="mongo,nosql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方">
+<meta property="og:url" content="https://www.xiwei.me/2012/02/14/MongodbGridFS文件存储/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="一、命令行操作：1C:Userslwx&amp;gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db test -t png 或者12345C:Userslwx&amp;gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db test -t &quot;image/png&quot;connected to: 192">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方">
+<meta name="twitter:description" content="一、命令行操作：1C:Userslwx&amp;gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db test -t png 或者12345C:Userslwx&amp;gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db test -t &quot;image/png&quot;connected to: 192">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-MongodbGridFS文件存储" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Mongodb GridFS文件存储，Nginx-Gridfs读取需要注意的地方
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/02/14/MongodbGridFS文件存储/" class="article-date">
+  <time datetime="2012-02-14T09:11:09.000Z" itemprop="datePublished">2012-02-14</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="一、命令行操作："><a href="#一、命令行操作：" class="headerlink" title="一、命令行操作："></a>一、命令行操作：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:Userslwx&gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db <span class="built_in">test</span> -t png</span><br></pre></td></tr></table></figure>
+<p>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C:Userslwx&gt;mongofiles put D:/www/health.png -h 192.168.20.64 -db <span class="built_in">test</span> -t <span class="string">"image/png"</span></span><br><span class="line">connected to: 192.168.20.64</span><br><span class="line">added file: &#123; _id: ObjectId(<span class="string">'4e3a274aad9bf748d735e8d7'</span>), filename: <span class="string">"D:/www/health.png"</span>, chunkSize: 262144, uploadDate: new Date(1312433994910), md5: <span class="string">"34cb91d3ebc40c314f4be</span></span><br><span class="line"><span class="string">e23d57112fd"</span>, length: 826796, contentType: <span class="string">"image/png"</span> &#125;</span><br><span class="line"><span class="keyword">done</span>!</span><br></pre></td></tr></table></figure></p>
+<p>contentType:”image/png” 就是-t参数传递的值<br><a id="more"></a></p>
+<h4 id="二、用php的mongo扩展写入"><a href="#二、用php的mongo扩展写入" class="headerlink" title="二、用php的mongo扩展写入"></a>二、用php的mongo扩展写入</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"><span class="variable">$db</span> = new Mongo();</span><br><span class="line"><span class="variable">$grid</span> = <span class="variable">$db</span>-&gt;getGridFS();</span><br><span class="line">//将一个文件写入</span><br><span class="line"><span class="variable">$grid</span>-&gt;storeFile(<span class="string">"D:/www/health.png"</span>,array(<span class="string">'contentType'</span>=&gt;<span class="string">'image/png'</span>));</span><br><span class="line"></span><br><span class="line">//将一个上传的文件写入</span><br><span class="line">//hmtl</span><br><span class="line">//&lt;input <span class="built_in">type</span>=<span class="string">"file"</span> name=<span class="string">"upload"</span> id=<span class="string">"upload"</span> /&gt;</span><br><span class="line"></span><br><span class="line"><span class="variable">$id</span> = <span class="variable">$grid</span>-&gt;storeUpload(<span class="string">'upload'</span>,<span class="variable">$_FILES</span>[<span class="string">'upload'</span>][<span class="string">'name'</span>]);</span><br><span class="line"><span class="variable">$grid</span>-&gt;upload(array(<span class="string">"_id"</span> =&gt; <span class="variable">$id</span>),array(<span class="string">'$set'</span>=&gt;array(<span class="string">'contentType'</span>=&gt;<span class="variable">$_FILES</span>[<span class="string">'upload'</span>][<span class="string">'type'</span>])));</span><br></pre></td></tr></table></figure>
+<p>当用到nginx-gridfs扩展读取的时候会在相应的文件头中的加入Content-type: image/png’，这样当浏览器访问的时候就能正确解释类型了</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/02/14/整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          整合现有的Nginx与MongoDB的GridFSNginx-Gridfs”的安装与配置过程
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SSH密钥登录让Linux VPS/服务器更安全</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

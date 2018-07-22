@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RabbitMQ工作模式与示例(二) | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="示例2中，交换机被配置为direct路由方式，它将根据bind路由信息将特定的路由键信息送至对应的队列中。生产者只负责将信息发送到交换机，而不关心交换机是如何配置的。从代码中可以看出这一点。">
+<meta name="keywords" content="amqp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ工作模式与示例(二)">
+<meta property="og:url" content="https://www.xiwei.me/2012/12/01/RabbitMQ工作模式与示例-二/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="示例2中，交换机被配置为direct路由方式，它将根据bind路由信息将特定的路由键信息送至对应的队列中。生产者只负责将信息发送到交换机，而不关心交换机是如何配置的。从代码中可以看出这一点。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2012/12/F24833E55C4DABB1F06536F6D7F7D34270E33C05049E_524_174.jpeg">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.724Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RabbitMQ工作模式与示例(二)">
+<meta name="twitter:description" content="示例2中，交换机被配置为direct路由方式，它将根据bind路由信息将特定的路由键信息送至对应的队列中。生产者只负责将信息发送到交换机，而不关心交换机是如何配置的。从代码中可以看出这一点。">
+<meta name="twitter:image" content="https://static.yexiwei.com/wp-content/uploads/2012/12/F24833E55C4DABB1F06536F6D7F7D34270E33C05049E_524_174.jpeg">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-RabbitMQ工作模式与示例-二" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RabbitMQ工作模式与示例(二)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2012/12/01/RabbitMQ工作模式与示例-二/" class="article-date">
+  <time datetime="2012-12-01T09:00:26.000Z" itemprop="datePublished">2012-12-01</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://static.yexiwei.com/wp-content/uploads/2012/12/F24833E55C4DABB1F06536F6D7F7D34270E33C05049E_524_174.jpeg" alt=""><br>示例2中，交换机被配置为direct路由方式，它将根据bind路由信息将特定的路由键信息送至对应的队列中。<br>生产者只负责将信息发送到交换机，而不关心交换机是如何配置的。从代码中可以看出这一点。<br><a id="more"></a></p>
+<h4 id="php"><a href="#php" class="headerlink" title="php:"></a>php:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">// Create a connection</span><br><span class="line"><span class="variable">$connection</span> = new AMQPConnection();</span><br><span class="line"><span class="variable">$connection</span>-&gt;connect();</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$connection</span>-&gt;isConnected()) &#123;</span><br><span class="line">    die(<span class="string">'Not connected :('</span> . PHP_EOL);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Create and open a channel</span><br><span class="line"><span class="variable">$channel</span> = new AMQPChannel(<span class="variable">$connection</span>);</span><br><span class="line"></span><br><span class="line">// Declare exchange</span><br><span class="line"><span class="variable">$exchange</span> = new AMQPExchange(<span class="variable">$channel</span>);</span><br><span class="line"><span class="variable">$exchange</span>-&gt;setName(<span class="string">'exchange2'</span>);</span><br><span class="line"><span class="variable">$exchange</span>-&gt;setType(<span class="string">'direct'</span>);</span><br><span class="line"><span class="variable">$exchange</span>-&gt;<span class="built_in">declare</span>();</span><br><span class="line"></span><br><span class="line">// Create Queue</span><br><span class="line">// we will use temp queue, so no queue should be created here</span><br><span class="line"></span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$exchange</span>-&gt;publish(<span class="string">'key1 - Custom Message (ts): '</span>.time(), <span class="string">'key1'</span>);</span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$exchange</span>-&gt;publish(<span class="string">'key2 - Custom Message (ts): '</span>.time(), <span class="string">'key2'</span>);</span><br><span class="line"><span class="variable">$message</span> = <span class="variable">$exchange</span>-&gt;publish(<span class="string">'key3 - Custom Message (ts): '</span>.time(), <span class="string">'key3'</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$message</span>) &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'Message not sent'</span>, PHP_EOL;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'Message sent!'</span>, PHP_EOL;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="python"><a href="#python" class="headerlink" title="python:"></a>python:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import pika</span><br><span class="line">def mqClient_rcv():</span><br><span class="line">    credentials = pika.PlainCredentials(<span class="string">"guest"</span>, <span class="string">"guest"</span>)</span><br><span class="line">    conn_params = pika.ConnectionParameters(<span class="string">"172.16.2.38"</span>, credentials = credentials)</span><br><span class="line">    connection = pika.BlockingConnection(conn_params)</span><br><span class="line"></span><br><span class="line">    channel = connection.channel()</span><br><span class="line">    channel.exchange_declare(exchange=<span class="string">'exchange2'</span>, <span class="built_in">type</span>=<span class="string">'direct'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#here we create 2 temp queues</span></span><br><span class="line">    result_a = channel.queue_declare()</span><br><span class="line">    queue_name_a=result_a.method.queue</span><br><span class="line">    result_b = channel.queue_declare()</span><br><span class="line">    queue_name_b=result_b.method.queue</span><br><span class="line"></span><br><span class="line">    <span class="comment">#bind</span></span><br><span class="line">    channel.queue_bind(exchange=<span class="string">'exchange2'</span>,</span><br><span class="line">                       queue=queue_name_a,</span><br><span class="line">                       routing_key=<span class="string">'key1'</span>)</span><br><span class="line">    channel.queue_bind(exchange=<span class="string">'exchange2'</span>,</span><br><span class="line">                       queue=queue_name_a,</span><br><span class="line">                       routing_key=<span class="string">'key2'</span>)</span><br><span class="line">    channel.queue_bind(exchange=<span class="string">'exchange2'</span>,</span><br><span class="line">                       queue=queue_name_b,</span><br><span class="line">                       routing_key=<span class="string">'key3'</span>)</span><br><span class="line"></span><br><span class="line">    channel.basic_consume(callback_a,</span><br><span class="line">                          queue=queue_name_a,</span><br><span class="line">                          no_ack=True)</span><br><span class="line">    channel.basic_consume(callback_b,</span><br><span class="line">                          queue=queue_name_b,</span><br><span class="line">                          no_ack=True)</span><br><span class="line">    channel.start_consuming()</span><br><span class="line"></span><br><span class="line">def callback_a(ch, method, properties, body):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">"Queue A Received %r"</span> % (body,)</span><br><span class="line"></span><br><span class="line">def callback_b(ch, method, properties, body):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">"Queue B Received %r"</span> % (body,)</span><br><span class="line"></span><br><span class="line">mqClient_rcv()</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/12/01/RabbitMQ工作模式与示例-一/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RabbitMQ工作模式与示例(一)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/12/01/RabbitMQ工作模式与示例-三/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">RabbitMQ工作模式与示例(三)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

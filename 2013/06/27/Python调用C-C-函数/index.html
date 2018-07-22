@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Python调用C/C++函数 | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python是一门功能强大的高级脚本语言，它的强大不仅表现在其自身的功能上，而且还表现在其良好的可扩展性上，正因如此，Python已经开始受到越来越多人的青睐，并且被屡屡成功地应用于各类大型软件系统的开发过程中。与其它普通脚本语言有所不同，Python程序员可以借助Python语言提供的API，使用C或者C++来对Python进行功能性扩展，从而即可以利用Python方便灵活的语法和功能，又可以获">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python调用C&#x2F;C++函数">
+<meta property="og:url" content="https://www.xiwei.me/2013/06/27/Python调用C-C-函数/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="Python是一门功能强大的高级脚本语言，它的强大不仅表现在其自身的功能上，而且还表现在其良好的可扩展性上，正因如此，Python已经开始受到越来越多人的青睐，并且被屡屡成功地应用于各类大型软件系统的开发过程中。与其它普通脚本语言有所不同，Python程序员可以借助Python语言提供的API，使用C或者C++来对Python进行功能性扩展，从而即可以利用Python方便灵活的语法和功能，又可以获">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python调用C&#x2F;C++函数">
+<meta name="twitter:description" content="Python是一门功能强大的高级脚本语言，它的强大不仅表现在其自身的功能上，而且还表现在其良好的可扩展性上，正因如此，Python已经开始受到越来越多人的青睐，并且被屡屡成功地应用于各类大型软件系统的开发过程中。与其它普通脚本语言有所不同，Python程序员可以借助Python语言提供的API，使用C或者C++来对Python进行功能性扩展，从而即可以利用Python方便灵活的语法和功能，又可以获">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Python调用C-C-函数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python调用C/C++函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2013/06/27/Python调用C-C-函数/" class="article-date">
+  <time datetime="2013-06-27T08:43:14.000Z" itemprop="datePublished">2013-06-27</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Python是一门功能强大的高级脚本语言，它的强大不仅表现在其自身的功能上，而且还表现在其良好的可扩展性上，正因如此，Python已经开始受到越来越多人的青睐，并且被屡屡成功地应用于各类大型软件系统的开发过程中。<br>与其它普通脚本语言有所不同，Python程序员可以借助Python语言提供的API，使用C或者C++来对Python进行功能性扩展，从而即可以利用Python方便灵活的语法和功能，又可以获得与C或者C++几乎相同的执行性能。执行速度慢是几乎所有脚本语言都具有的共性，也是倍受人们指责的一个重要因素，Python则通过与C语言的有机结合巧妙地解决了这一问题，从而使脚本语言的应用范围得到了很大扩展。<br><a id="more"></a><br>下面以一个简单的例子说明如何把一个C函数编译为共享库供python调用的：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">//wrap.cpp</span><br><span class="line"><span class="comment">#include</span></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">//目标函数</span><br><span class="line">int fact(int n)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= 1)</span><br><span class="line">        <span class="built_in">return</span> 1;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">return</span> n * fact(n - 1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//python 包装</span><br><span class="line">PyObject* wrap_fact(PyObject* self, PyObject* args)</span><br><span class="line">&#123;</span><br><span class="line">      int n, result;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (! PyArg_ParseTuple(args, <span class="string">"i:fact"</span>, &amp;n))  //把python的变量转换成c的变量</span><br><span class="line">           <span class="built_in">return</span> NULL;</span><br><span class="line">      result = fact(n);</span><br><span class="line">      <span class="built_in">return</span> Py_BuildValue(<span class="string">"i"</span>, result);//把c的返回值n转换成python的对象</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//  方法列表</span><br><span class="line">static PyMethodDef exampleMethods[] =</span><br><span class="line">&#123;</span><br><span class="line">      &#123;<span class="string">"fact"</span>, wrap_fact, METH_VARARGS, <span class="string">"Caculate N!"</span>&#125;,</span><br><span class="line">      &#123;NULL, NULL&#125;</span><br><span class="line">&#125;;</span><br><span class="line">//方法列表中的每项由四个部分组成：方法名、导出函数、参数传递方式和方法描述。</span><br><span class="line">方法名是从Python解释器中调用该方法时所使用的名字。</span><br><span class="line">参数传递方式则规定了Python向C函数传递参数的具体形式，可选的两种方式是METH_VARARGS和METH_KEYWORDS，</span><br><span class="line">其中METH_VARARGS是参数传递的标准形式，它通过Python的元组在Python解释器和C函数之间传递参数，若采用METH_KEYWORD方式，则Python解释器和C函数之间将通过Python的字典类型在两者之间进行参数传递。</span><br><span class="line"></span><br><span class="line">//初始化函数</span><br><span class="line">PyMODINIT_FUNC initexample()</span><br><span class="line">&#123;</span><br><span class="line">      PyObject* m;</span><br><span class="line">      m = Py_InitModule(<span class="string">"example"</span>, exampleMethods);</span><br><span class="line">&#125;</span><br><span class="line">//所有的Python扩展模块都必须要有一个初始化函数，以便Python解释器能够对模块进行正确的初始化。Python解释器规定所有的初始化函数的函数名都必须以init开头，并加上模块的名字。对于模块example来说，则相应的初始化函数为</span><br></pre></td></tr></table></figure></p>
+<p>生成共享库.so供python调用：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ -fPIC -c -I /usr/include/python2.3 wrap.cpp</span><br><span class="line">g++ -shared -o example.so wrap.o</span><br></pre></td></tr></table></figure></p>
+<p>测试一下：<br>test.py<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line">import sys</span><br><span class="line">sys.path.append(<span class="string">'...'</span>) //添加example.so所在的路径</span><br><span class="line">import example</span><br><span class="line">a = example.fact(4)</span><br><span class="line"><span class="built_in">print</span> a</span><br><span class="line">输出：24</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2013/09/08/移动推送技术/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          移动推送技术（Push Notification
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2013/04/18/CentOS6-3源码安装Percona5-5-30/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">CentOS6.3源码安装Percona5.5.30</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

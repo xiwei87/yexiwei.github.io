@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CentOS6.3源码安装Percona5.5.30 | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Percona 为 MySQL 数据库服务器进行了改进，在功能和性能上较 MySQL 有着很显著的提升。该版本提升了在高负载情况下的 InnoDB 的性能、为 DBA 提供一些非常有用的性能诊断工具；另外有更多的参数和命令来控制服务器行为。Percona（mysql）从5.5版本开始，不再使用./configure编译，而是使用cmake编译器，具体的cmake编译参数可以参考mysql官网文档,">
+<meta name="keywords" content="centos,mysql,percona,安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS6.3源码安装Percona5.5.30">
+<meta property="og:url" content="https://www.xiwei.me/2013/04/18/CentOS6-3源码安装Percona5-5-30/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="Percona 为 MySQL 数据库服务器进行了改进，在功能和性能上较 MySQL 有着很显著的提升。该版本提升了在高负载情况下的 InnoDB 的性能、为 DBA 提供一些非常有用的性能诊断工具；另外有更多的参数和命令来控制服务器行为。Percona（mysql）从5.5版本开始，不再使用./configure编译，而是使用cmake编译器，具体的cmake编译参数可以参考mysql官网文档,">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.722Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS6.3源码安装Percona5.5.30">
+<meta name="twitter:description" content="Percona 为 MySQL 数据库服务器进行了改进，在功能和性能上较 MySQL 有着很显著的提升。该版本提升了在高负载情况下的 InnoDB 的性能、为 DBA 提供一些非常有用的性能诊断工具；另外有更多的参数和命令来控制服务器行为。Percona（mysql）从5.5版本开始，不再使用./configure编译，而是使用cmake编译器，具体的cmake编译参数可以参考mysql官网文档,">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-CentOS6-3源码安装Percona5-5-30" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CentOS6.3源码安装Percona5.5.30
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2013/04/18/CentOS6-3源码安装Percona5-5-30/" class="article-date">
+  <time datetime="2013-04-18T08:51:30.000Z" itemprop="datePublished">2013-04-18</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Percona 为 MySQL 数据库服务器进行了改进，在功能和性能上较 MySQL 有着很显著的提升。该版本提升了在高负载情况下的 InnoDB 的性能、为 DBA 提供一些非常有用的性能诊断工具；另外有更多的参数和命令来控制服务器行为。<br>Percona（mysql）从5.5版本开始，不再使用./configure编译，而是使用cmake编译器，具体的cmake编译参数可以参考mysql官网文档,(※ 非常重要)<br><a href="http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html</a><br><a id="more"></a><br>Percona-Server-5.5.30-rel30.2.tar.gz源码包下载地址：<br><a href="http://www.percona.com/redir/downloads/Percona-Server-5.5/LATEST/source/Percona-Server-5.5.30-rel30.2.tar.gz" target="_blank" rel="noopener">http://www.percona.com/redir/downloads/Percona-Server-5.5/LATEST/source/Percona-Server-5.5.30-rel30.2.tar.gz</a></p>
+<p>我的mysql目录配置如下：<br>安装路径：/usr/local/mysql<br>数据库路径：/data/mysql</p>
+<p>准备工作：安装基本依赖包，先用yum安装cmake、automake 、autoconf ，另MySQL 5.5.x需要最少安装的包有：bison,gcc、gcc-c++、ncurses-devel<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum install cmake make -y</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install gcc gcc-c++ autoconf bison automake zlib* fiex* libxml* ncurses-devel libmcrypt* libtool-ltdl-devel* -y</span></span><br></pre></td></tr></table></figure></p>
+<p>开始编译安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># tar -zxvf Percona-Server-5.5.30-rel30.2.tar.gz</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd Percona-Server-5.5.30-rel30.2</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql</span></span><br><span class="line">-DMYSQL_UNIX_ADDR=/data/mysql/mysql.sock</span><br><span class="line">-DDEFAULT_CHARSET=utf8</span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci</span><br><span class="line">-DWITH_EXTRA_CHARSETS:STRING=utf8,gbk</span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1</span><br><span class="line">-DWITH_READLINE=1</span><br><span class="line">-DENABLED_LOCAL_INFILE=1</span><br><span class="line">-DMYSQL_DATADIR=/data/mysql/</span><br><span class="line">-DMYSQL_TCP_PORT=3306</span><br><span class="line">[root@localhost ~]<span class="comment"># make &amp;&amp; make install</span></span><br><span class="line">mysql官网英文文档简单翻译说明一下</span><br><span class="line">The MyISAM, MERGE, MEMORY, and CSV engines are mandatory (always compiled into the server) and need not be installed explicitly.（说明：mysql默认支持的数据库引擎有MyISAM, MERGE, MEMORY, CSV，无需在编译时再声明）</span><br><span class="line">所以上面的编译条件省掉了如下两行</span><br><span class="line">-DWITH_MYISAM_STORAGE_ENGINE=1</span><br><span class="line">-DWITH_MEMORY_STORAGE_ENGINE=1</span><br><span class="line">但INNODB一定要声明式安装，所以多了这一行</span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1</span><br></pre></td></tr></table></figure></p>
+<p>查看mysql.mysql的用户及组是否存在<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat /etc/passwd |grep mysql</span></span><br><span class="line">mysql:x:500:500::/home/mysql:/sbin/nologin</span><br><span class="line">[root@localhost ~]<span class="comment"># cat /etc/group |grep mysql</span></span><br><span class="line">mysql:x:500:</span><br></pre></td></tr></table></figure></p>
+<p>不OK就执行以下两行命令（否则跳过这一步）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd mysql #添加mysql用户组</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd mysql -g mysql -s /sbin/nologin #</span></span><br></pre></td></tr></table></figure></p>
+<p>添加mysql用户</p>
+<p>以下带红色字体的命令非常非常，必须要执行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown mysql.mysql -R . #将mysql目录赋予mysql用户的执行权限</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown mysql.mysql -R /data/mysql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp support-files/my-medium.cnf /etc/my.cnf #mysql配置文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chmod 755 scripts/mysql_install_db #赋予mysql_install_db执行权限</span></span><br></pre></td></tr></table></figure></p>
+<p>以下命令为mysql 启动及自启动配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># scripts/mysql_install_db –user=mysql –basedir=/usr/local/mysql –datadir=/data/mysql/</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp support-files/mysql.server /etc/init.d/mysqld</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chmod 755 /etc/init.d/mysqld</span></span><br><span class="line">查看mysqld服务是否设置为开机启动</span><br><span class="line">[root@localhost ~]<span class="comment"># chkconfig –list|grep mysqld</span></span><br><span class="line">设置为开机启动</span><br><span class="line">[root@localhost ~]<span class="comment"># chkconfig mysqld on</span></span><br></pre></td></tr></table></figure></p>
+<p>启动mysql数据库，会输出一系列有用的信息，告诉你接下去如何初始化mysql<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@centos mysql]<span class="comment"># service mysqld start</span></span><br><span class="line">初始化 MySQL 数据库： Installing MySQL system tables…</span><br><span class="line">OK</span><br><span class="line">Filling <span class="built_in">help</span> tables…</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">To start mysqld at boot time you have to copy</span><br><span class="line">support-files/mysql.server to the right place <span class="keyword">for</span> your system</span><br><span class="line"></span><br><span class="line">PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !</span><br><span class="line">To <span class="keyword">do</span> so, start the server, <span class="keyword">then</span> issue the following commands:</span><br><span class="line"></span><br><span class="line">/usr/bin/mysqladmin -u root password ‘new-password’</span><br><span class="line">/usr/bin/mysqladmin -u root -h centos.huoba password ‘new-password’</span><br><span class="line"></span><br><span class="line">Alternatively you can run:</span><br><span class="line">/usr/bin/mysql_secure_installation</span><br><span class="line"></span><br><span class="line"><span class="built_in">which</span> will also give you the option of removing the <span class="built_in">test</span></span><br><span class="line">databases and anonymous user created by default. This is</span><br><span class="line">strongly recommended <span class="keyword">for</span> production servers.</span><br><span class="line"></span><br><span class="line">See the manual <span class="keyword">for</span> more instructions.</span><br><span class="line"></span><br><span class="line">You can start the MySQL daemon with:</span><br><span class="line"><span class="built_in">cd</span> /usr ; /usr/bin/mysqld_safe &amp;</span><br><span class="line"></span><br><span class="line">You can <span class="built_in">test</span> the MySQL daemon with mysql-test-run.pl</span><br><span class="line"><span class="built_in">cd</span> /usr/mysql-test ; perl mysql-test-run.pl</span><br><span class="line"></span><br><span class="line">Please report any problems with the /usr/bin/mysqlbug script!</span><br></pre></td></tr></table></figure></p>
+<p>按照上述英文，我们来初始化管理员root的密码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># /usr/local/mysql/bin/mysqladmin -u root password ‘yourpassword’</span></span><br></pre></td></tr></table></figure></p>
+<p>众所周知，mysql有两种帐号类型，即localhost和%，前者限本机连接mysql，后者可用于其它机器远程连接mysql<br>最后，处理帐号登录问题，让root帐号密码可以本地和远程连接使用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># /usr/local/mysql/bin/mysql -u root -p #敲入该命令后，屏幕会提示输入密码，输入上一步设置的yourpassword</span></span><br><span class="line">删除root密码为空的记录</span><br><span class="line">mysql&gt; use mysql;</span><br><span class="line">mysql&gt; delete from user <span class="built_in">where</span> password=”;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">配置mysql允许root远程登录 <span class="comment">#登录</span></span><br><span class="line">mysql&gt; grant all privileges on *.* to root@’%’ identified by “root”;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; quit</span><br></pre></td></tr></table></figure></p>
+<p>到这里Percona已经安装完毕，本文章参考了<a href="http://blog.csdn.net/yeno/article/details/8053571" target="_blank" rel="noopener">http://blog.csdn.net/yeno/article/details/8053571</a> （零起步6-CentOS6.3源码安装mysql5.5.28） 这边文章， 在这对原作者标识感谢！</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2013/06/27/Python调用C-C-函数/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python调用C/C++函数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/12/01/RabbitMQ工作模式与示例-一/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">RabbitMQ工作模式与示例(一)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

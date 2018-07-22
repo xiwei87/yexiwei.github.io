@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux VPS上DenyHosts阻止SSH暴力攻击 | Lance&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。">
+<meta name="keywords" content="linux,vps">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux VPS上DenyHosts阻止SSH暴力攻击">
+<meta property="og:url" content="https://www.xiwei.me/2011/02/24/LinuxVPS上DenyHosts阻止SSH暴力攻击/index.html">
+<meta property="og:site_name" content="Lance&#39;blog">
+<meta property="og:description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/ssh.jpg">
+<meta property="og:updated_time" content="2018-07-22T14:45:22.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux VPS上DenyHosts阻止SSH暴力攻击">
+<meta name="twitter:description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。">
+<meta name="twitter:image" content="https://static.yexiwei.com/wp-content/uploads/2011/02/ssh.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-LinuxVPS上DenyHosts阻止SSH暴力攻击" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux VPS上DenyHosts阻止SSH暴力攻击
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2011/02/24/LinuxVPS上DenyHosts阻止SSH暴力攻击/" class="article-date">
+  <time datetime="2011-02-24T09:26:47.000Z" itemprop="datePublished">2011-02-24</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。<br><img src="https://static.yexiwei.com/wp-content/uploads/2011/02/ssh.jpg" alt=""><br>竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。<br>DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。<br><a id="more"></a><br>DenyHosts官方网站为：<a href="http://denyhosts.sourceforge.net/" target="_blank" rel="noopener">http://denyhosts.sourceforge.net/</a></p>
+<h4 id="1、下载DenyHosts-并解压"><a href="#1、下载DenyHosts-并解压" class="headerlink" title="1、下载DenyHosts 并解压"></a>1、下载DenyHosts 并解压</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget http://soft.vpser.net/security/denyhosts/DenyHosts-2.6.tar.gz</span></span><br><span class="line"><span class="comment"># tar zxvf DenyHosts-2.6.tar.gz</span></span><br><span class="line"><span class="comment"># cd DenyHosts-2.6</span></span><br></pre></td></tr></table></figure>
+<h4 id="2、安装、配置和启动"><a href="#2、安装、配置和启动" class="headerlink" title="2、安装、配置和启动"></a>2、安装、配置和启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python setup.py install 默认是安装到/usr/share/denyhosts/目录的,进入相应的目录修改配置文件</span></span><br><span class="line"><span class="comment"># cd /usr/share/denyhosts/</span></span><br><span class="line"><span class="comment"># cp denyhosts.cfg-dist denyhosts.cfg</span></span><br><span class="line"><span class="comment"># cp daemon-control-dist daemon-control</span></span><br></pre></td></tr></table></figure>
+<p>默认的设置已经可以适合centos系统环境，你们可以使用vi命令查看一下denyhosts.cfg和daemon-control，里面有详细的解释<br>接着使用下面命令启动denyhosts程序<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chown root daemon-control</span></span><br><span class="line"><span class="comment"># chmod 700 daemon-control</span></span><br><span class="line"><span class="comment"># ./daemon-control start</span></span><br></pre></td></tr></table></figure></p>
+<p>如果要使DenyHosts每次重起后自动启动还需做如下设置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd /etc/init.d</span></span><br><span class="line"><span class="comment"># ln -s /usr/share/denyhosts/daemon-control denyhosts</span></span><br><span class="line"><span class="comment"># chkconfig –add denyhosts</span></span><br><span class="line"><span class="comment"># chkconfig –level 2345 denyhosts on</span></span><br></pre></td></tr></table></figure></p>
+<p>或者执行下面的命令，将会修改/etc/rc.local文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># echo “/usr/share/denyhosts/daemon-control start” &gt;&gt; /etc/rc.local</span></span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2011/02/24/SSH密钥登录让LinuxVPS-服务器更安全/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          SSH密钥登录让Linux VPS/服务器更安全
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/03/30/全球可信并且唯一免费的HTTPS-SSL-证书颁发机构StartSSL/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">全球可信并且唯一免费的HTTPS(SSL)证书颁发机构StartSSL</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 Lance Yip 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
