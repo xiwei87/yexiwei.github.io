@@ -5,19 +5,19 @@
   
   <title>Linux VPS上DenyHosts阻止SSH暴力攻击 | Lance&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。">
+  <meta name="description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。DenyH">
 <meta name="keywords" content="linux,vps">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux VPS上DenyHosts阻止SSH暴力攻击">
 <meta property="og:url" content="https://www.xiwei.me/2011/02/24/LinuxVPS上DenyHosts阻止SSH暴力攻击/index.html">
 <meta property="og:site_name" content="Lance&#39;blog">
-<meta property="og:description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。">
+<meta property="og:description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。DenyH">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/ssh.jpg">
-<meta property="og:updated_time" content="2018-08-06T13:48:23.188Z">
+<meta property="og:updated_time" content="2018-09-12T16:22:24.724Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux VPS上DenyHosts阻止SSH暴力攻击">
-<meta name="twitter:description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。">
+<meta name="twitter:description" content="刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。DenyH">
 <meta name="twitter:image" content="https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/ssh.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Lance&#39;blog" type="application/atom+xml">
@@ -56,7 +56,7 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <p>刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。<br><img src="https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/ssh.jpg" alt=""><br>竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。<br>DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。<br><a id="more"></a><br>DenyHosts官方网站为：<a href="http://denyhosts.sourceforge.net/" target="_blank" rel="noopener">http://denyhosts.sourceforge.net/</a></p>
+        <p>刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。<br><img src="https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/ssh.jpg" alt=""><br>竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。<br>DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。<br>DenyHosts官方网站为：<a href="http://denyhosts.sourceforge.net/" target="_blank" rel="noopener">http://denyhosts.sourceforge.net/</a></p>
 <h4 id="1、下载DenyHosts-并解压"><a href="#1、下载DenyHosts-并解压" class="headerlink" title="1、下载DenyHosts 并解压"></a>1、下载DenyHosts 并解压</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget http://soft.vpser.net/security/denyhosts/DenyHosts-2.6.tar.gz</span></span><br><span class="line"><span class="comment"># tar zxvf DenyHosts-2.6.tar.gz</span></span><br><span class="line"><span class="comment"># cd DenyHosts-2.6</span></span><br></pre></td></tr></table></figure>
 <h4 id="2、安装、配置和启动"><a href="#2、安装、配置和启动" class="headerlink" title="2、安装、配置和启动"></a>2、安装、配置和启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python setup.py install 默认是安装到/usr/share/denyhosts/目录的,进入相应的目录修改配置文件</span></span><br><span class="line"><span class="comment"># cd /usr/share/denyhosts/</span></span><br><span class="line"><span class="comment"># cp denyhosts.cfg-dist denyhosts.cfg</span></span><br><span class="line"><span class="comment"># cp daemon-control-dist daemon-control</span></span><br></pre></td></tr></table></figure>
 <p>默认的设置已经可以适合centos系统环境，你们可以使用vi命令查看一下denyhosts.cfg和daemon-control，里面有详细的解释<br>接着使用下面命令启动denyhosts程序<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chown root daemon-control</span></span><br><span class="line"><span class="comment"># chmod 700 daemon-control</span></span><br><span class="line"><span class="comment"># ./daemon-control start</span></span><br></pre></td></tr></table></figure></p>

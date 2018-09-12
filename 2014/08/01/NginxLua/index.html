@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="Lance&#39;blog">
 <meta property="og:description" content="1.1. 介绍ngx_lua – 把lua语言嵌入nginx中,使其支持lua来快速开发基于nginx下的业务逻辑该模块不在nginx源码包中，需自行下载编译安装。使用lua 5.1（目前不支持lua 5.2） 或 luajit 2.0 。添加lua支持后，开发复杂的模块，周期快，依然是100%异步非阻塞。ngx_lua 哪些人在用:淘宝、腾讯财经、网易财经、360、去哪儿网等CloudFlare">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-22T14:45:22.723Z">
+<meta property="og:updated_time" content="2018-09-12T16:22:48.037Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx Lua">
 <meta name="twitter:description" content="1.1. 介绍ngx_lua – 把lua语言嵌入nginx中,使其支持lua来快速开发基于nginx下的业务逻辑该模块不在nginx源码包中，需自行下载编译安装。使用lua 5.1（目前不支持lua 5.2） 或 luajit 2.0 。添加lua支持后，开发复杂的模块，周期快，依然是100%异步非阻塞。ngx_lua 哪些人在用:淘宝、腾讯财经、网易财经、360、去哪儿网等CloudFlare">
@@ -53,7 +53,7 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1. 介绍"></a>1.1. 介绍</h3><p>ngx_lua – 把lua语言嵌入nginx中,使其支持lua来快速开发基于nginx下的业务逻辑<br>该模块不在nginx源码包中，需自行下载编译安装。使用lua 5.1（目前不支持lua 5.2） 或 luajit 2.0 。<br>添加lua支持后，开发复杂的模块，周期快，依然是100%异步非阻塞。<br>ngx_lua 哪些人在用:<br>淘宝、腾讯财经、网易财经、360、去哪儿网等<br>CloudFlare, CNN, Wingify, Reblaze, Turner, Broadcasting System<br>该项目主要开发者：<br>chaoslawful Taobao, Alibaba Grp.<br>agentzh CloudFlare<br><a href="https://github.com/chaoslawful/lua-nginx-module" target="_blank" rel="noopener">https://github.com/chaoslawful/lua-nginx-module</a><br><a id="more"></a></p>
+        <h3 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1. 介绍"></a>1.1. 介绍</h3><p>ngx_lua – 把lua语言嵌入nginx中,使其支持lua来快速开发基于nginx下的业务逻辑<br>该模块不在nginx源码包中，需自行下载编译安装。使用lua 5.1（目前不支持lua 5.2） 或 luajit 2.0 。<br>添加lua支持后，开发复杂的模块，周期快，依然是100%异步非阻塞。<br>ngx_lua 哪些人在用:<br>淘宝、腾讯财经、网易财经、360、去哪儿网等<br>CloudFlare, CNN, Wingify, Reblaze, Turner, Broadcasting System<br>该项目主要开发者：<br>chaoslawful Taobao, Alibaba Grp.<br>agentzh CloudFlare<br><a href="https://github.com/chaoslawful/lua-nginx-module" target="_blank" rel="noopener">https://github.com/chaoslawful/lua-nginx-module</a></p>
 <h3 id="1-2-安装"><a href="#1-2-安装" class="headerlink" title="1.2. 安装"></a>1.2. 安装</h3><h4 id="1-2-1-安装JIT平台"><a href="#1-2-1-安装JIT平台" class="headerlink" title="1.2.1. 安装JIT平台"></a>1.2.1. 安装JIT平台</h4><h6 id="JIT"><a href="#JIT" class="headerlink" title="JIT"></a>JIT</h6><p>通常，程序有两种运行方式：静态编译与动态直译。<br>静态编译的程序在执行前全部被翻译为机器码，而动态直译执行的则是一句一句边运行边翻译。<br>即时编译(Just-In-Time Compiler)则混合了这二者，一句一句编译源代码，但是会将翻译过的代码缓存起来以降低性能损耗。<br>JAVA、.NET 实现都使用即时编译以提供高速的代码执行。<br>注意：<br>在nginx.conf中添加”lua_code_cache on/off”，来开启是否将代码缓存，所以每次变更”*.lua”文件时，必须reload nginx才可生效。仅针对”set_by_lua_file, content_by_lua_file, rewrite_by_lua_file, and access_by_lua_file”有效, 因为其他为写在配置文件中，更改代码也必须reload nginx。在生产环境下，不能禁用cache。同时在lua代码中使用”dofile” 或 “loadfie” 来加载外部lua脚本将不会对它进行缓存，应该使用”require”来代替。禁用cache，当且仅当在调式代码下。</p>
 <h6 id="LuaJIT"><a href="#LuaJIT" class="headerlink" title="LuaJIT"></a>LuaJIT</h6><p>是一个利用JIT编译技术把Lua脚本直接编译成机器码由CPU运行<br>版本：2.0 与 2.1<br>当前稳定版本为 2.0。<br>2.1为版本与ngx_lua将有较大性能提升，主要是CloudFlare公司对luajit的捐赠。<br>FFI库，是LuaJIT中最重要的一个扩展库。</p>
 <ol>
