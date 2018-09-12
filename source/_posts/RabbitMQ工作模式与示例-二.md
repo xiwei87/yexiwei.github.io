@@ -3,7 +3,7 @@ title: RabbitMQ工作模式与示例(二)
 date: 2012-12-01 17:00:26
 tags: [amqp]
 ---
-![](https://static.yexiwei.com/wp-content/uploads/2012/12/F24833E55C4DABB1F06536F6D7F7D34270E33C05049E_524_174.jpeg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2012/12/F24833E55C4DABB1F06536F6D7F7D34270E33C05049E_524_174.jpeg)
 示例2中，交换机被配置为direct路由方式，它将根据bind路由信息将特定的路由键信息送至对应的队列中。
 生产者只负责将信息发送到交换机，而不关心交换机是如何配置的。从代码中可以看出这一点。
 <!--more--->

@@ -3,7 +3,7 @@ title: RabbitMQ工作模式与示例(一)
 date: 2012-12-01 17:03:07
 tags: [amqp]
 ---
-![](https://static.yexiwei.com/wp-content/uploads/2012/12/1AE02B9AEE4C25FDA5A78996DCEFCBCC020ACD05049E_362_154.png)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2012/12/1AE02B9AEE4C25FDA5A78996DCEFCBCC020ACD05049E_362_154.png)
 #### 概念：
 *     channel:通道，amqp支持一个tcp连接上启用多个mq通信通道，每个通道都可以被作为通信流。
 *     producer：生产者，是消息产生的源头。

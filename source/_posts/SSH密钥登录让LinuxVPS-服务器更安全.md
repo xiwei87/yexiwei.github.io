@@ -43,10 +43,10 @@ root@vpser:~#
 ##### 2、使用XShell生成密钥
 Xshell是一款Windows下面功能强大的SSH客户端，能够按分类保存N多会话、支持Tab、支持多密钥管理等等，管理比较多的VPS/服务器使用XShell算是比较方便的，推荐使用。
 下载XShell，安装，运行XShell，点击菜单：Tool ->User Key Generation Wizard，出现如下提示：
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-1.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-2.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-3.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-generation-wizard-4.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-key-generation-wizard-1.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-key-generation-wizard-2.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-key-generation-wizard-3.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-key-generation-wizard-4.jpg)
 点击Save as file将密钥保存为id_rsa.pub。
 #### 二、将密钥添加到远程Linux服务器
 1. 用winscp，将id_rsa.pub文件上传到/root/.ssh/下面（如果没有则创建此目录），并重命名为：authorized_keys（如果是在Linux服务器上生成的密钥直接执行：mv /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys），再执行：chmod 600 /root/.ssh/authorized_keys 修改权限。
@@ -57,19 +57,19 @@ Xshell是一款Windows下面功能强大的SSH客户端，能够按分类保存N
 putty使用的私钥文件和Linux服务器或XShell的私钥格式不同，如果使用putty的话，需要将Linux主机上生成的id_rsa文件下载的本地。运行putty压缩包里面的puttygen.exe，选择Conversions->Import key选择私钥文件id_rsa，输入密钥文件的密码，会出现如下界面：
 点击“Save Private Key”，将私钥保存为id_rsa.ppk
 运行putty，在Host Name填写：root@主机名或ip
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/putty-export-ppk.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/putty-1.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/putty-2.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/putty-3.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/putty-export-ppk.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/putty-1.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/putty-2.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/putty-3.jpg)
 如果设置了密钥密码，出现：Passphrase for key “imported-openssh-key”时输入密钥密码。
 如果设置没问题就会登录成功，出现用户提示符。
 ##### 2、XShell登录
 运行XShell，选择菜单File->New，按如下提示填写：
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-new-session-1.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-new-session-2.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-new-session-1.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-new-session-2.jpg)
 打开创建好的Session
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-select-session.jpg)
-![](https://static.yexiwei.com/wp-content/uploads/2011/02/xshell-key-login1.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-select-session.jpg)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/xshell-key-login1.jpg)
 如果设置没问题就会登录成功，出现用户提示符。
 ##### 3、Linux客户端登录测试
 在Linux客户端执行：chmod 600 /root/id_rsa 再执行：ssh root@www.vpser.net -i /root/id_rsa /root/id_rsa为私钥文件，第一次链接可能会提示确认，输入yes即可，再按提示输入密钥密码，没有问题就会出现用户提示符。

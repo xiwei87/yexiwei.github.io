@@ -8,7 +8,7 @@ comments: false
 我们都知道HTTPS能够加密信息，以免敏感信息被第三方获取。所以很多银行网站或电子邮箱等等安全级别较高的服务都会采用HTTPS协议。
 ### HTTPS简介
 HTTPS其实是有两部分组成：HTTP + SSL / TLS，也就是在HTTP上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过TLS进行加密，所以传输的数据都是加密后的数据。具体是如何进行加密，解密，验证的，且看下图
-![](https://static.yexiwei.com/wp-content/uploads/2014/08/https.png)
+![](https://dn-xiwei.qbox.me/wp-content/uploads/2014/08/https.png)
 <!--more-->
 #### 1. 客户端发起HTTPS请求
 这个没什么好说的，就是用户在浏览器里输入一个https网址，然后连接到server的443端口。
