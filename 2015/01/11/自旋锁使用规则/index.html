@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Lance&#39;blog">
 <meta property="og:description" content="获得自旋锁和释放自旋锁有好几个版本，因此让读者知道在什么样的情况下使用什么版本的获得和释放锁的宏是非常必要的。如果被保护的共享资源只在进程上下文访问和软中断（包括tasklet、timer）上下文访问，那么当在进程上下文访问共享资源时，可能被软中断打断， 从而可能进入软中断上下文来对被保护的共享资源访问，因此对于这种情况，对共享资源的访问必须使用spin_lock_bh和 spin_unlock_">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-17T14:31:51.917Z">
+<meta property="og:updated_time" content="2018-10-18T05:27:59.354Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自旋锁使用规则">
 <meta name="twitter:description" content="获得自旋锁和释放自旋锁有好几个版本，因此让读者知道在什么样的情况下使用什么版本的获得和释放锁的宏是非常必要的。如果被保护的共享资源只在进程上下文访问和软中断（包括tasklet、timer）上下文访问，那么当在进程上下文访问共享资源时，可能被软中断打断， 从而可能进入软中断上下文来对被保护的共享资源访问，因此对于这种情况，对共享资源的访问必须使用spin_lock_bh和 spin_unlock_">
