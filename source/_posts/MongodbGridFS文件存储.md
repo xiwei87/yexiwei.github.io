@@ -16,7 +16,6 @@ e23d57112fd", length: 826796, contentType: "image/png" }
 done!
 ```
 contentType:”image/png” 就是-t参数传递的值
-<!--more--->
 #### 二、用php的mongo扩展写入
 ```bash
 <?php

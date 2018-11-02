@@ -14,7 +14,6 @@ CloudFlare, CNN, Wingify, Reblaze, Turner, Broadcasting System
 chaoslawful Taobao, Alibaba Grp.
 agentzh CloudFlare
 [https://github.com/chaoslawful/lua-nginx-module](https://github.com/chaoslawful/lua-nginx-module)
-<!--more-->
 ### 1.2. 安装
 #### 1.2.1. 安装JIT平台
 ###### JIT

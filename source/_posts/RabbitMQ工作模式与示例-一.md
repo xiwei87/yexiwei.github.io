@@ -3,7 +3,7 @@ title: RabbitMQ工作模式与示例(一)
 date: 2012-12-01 17:03:07
 tags: [amqp]
 ---
-![](https://dn-xiwei.qbox.me/wp-content/uploads/2012/12/1AE02B9AEE4C25FDA5A78996DCEFCBCC020ACD05049E_362_154.png)
+![](https://static.yexiwei.com/wp-content/uploads/2012/12/1AE02B9AEE4C25FDA5A78996DCEFCBCC020ACD05049E_362_154.png)
 #### 概念：
 *     channel:通道，amqp支持一个tcp连接上启用多个mq通信通道，每个通道都可以被作为通信流。
 *     producer：生产者，是消息产生的源头。
@@ -18,7 +18,6 @@ tags: [amqp]
 1.         fanout：不处理路由键，转发到所有绑定的队列上
 1.         direct：处理路由键，必须完全匹配，即路由键字符串相同才会转发
 1.         topic：路由键模式匹配，此时队列需要绑定要一个模式上。符号“#”匹配一个或多个词，符号“*”匹配不多不少一个词。因此“audit.#”能够匹配到“audit.irs.corporate”，但是“audit.*” 只会匹配到“audit.irs”
-<!--more--->
 #### 示例1：Publish/Subscribe
 示例1中生产者是基于php的，而消费者是基于python的，工作模式采用不处理路由键方式转发。
 #### PHP:

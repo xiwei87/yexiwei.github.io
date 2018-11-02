@@ -78,7 +78,6 @@ apache 编译
 make
 make install
 ```
-<!--more--->
 #### 建立一个符号连接：
 ```bash
 ln -s /usr/local/apache2/bin/apachectl /etc/init.d/httpd

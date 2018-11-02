@@ -7,7 +7,6 @@ tags: [amqp, python, rabbitmq]
 模式中，符号‘#’匹配一个或多个词，符号‘*’匹配不多于一个词。
 如‘#’可匹配到(a.b) (a.b.c)  (b.c) ，即所有路由键
 而‘a.*’可匹配到(a.b)
-<!--more--->
 #### php:
 ```bash
 <?php

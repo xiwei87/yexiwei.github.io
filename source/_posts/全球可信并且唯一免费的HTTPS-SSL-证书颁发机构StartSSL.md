@@ -13,7 +13,6 @@ openssl req -new -key api.bz.key -out api.bz.csr
 openssl rsa -in api.bz.key -out api.bz_nopass.key
 ```
 ![](http://zyan.cc/attachment/200911/1258146742_2397f7b9.png)
-<!--more--->
 Nginx.conf的SSL证书配置，使用api.bz_nopass.key，在启动Nginx是无需输入SSL证书密码，而使用api.bz.key则需要输入密码：
 引用
 ```bash

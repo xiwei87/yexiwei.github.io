@@ -4,10 +4,9 @@ date: 2011-02-24 17:26:47
 tags: [vps,linux]
 ---
 刚装好DenyHosts，看来一下hosts.deny文件。突然吓了我一跳。
-![](https://dn-xiwei.qbox.me/wp-content/uploads/2011/02/ssh.jpg)
+![](https://static.yexiwei.com/wp-content/uploads/2011/02/ssh.jpg)
 竟然有这么IP连续登录SSH字典猜root密码，看来我装DenyHosts是明智之举。
 DenyHosts它会分析/var/log/secure（redhat，Fedora Core）等日志文件，当发现同一IP在进行多次SSH密码尝试时就会记录IP到/etc/hosts.deny文件，从而达到自动屏蔽该IP的目的。
-<!--more--->
 DenyHosts官方网站为：http://denyhosts.sourceforge.net/
 #### 1、下载DenyHosts 并解压
 ```bash

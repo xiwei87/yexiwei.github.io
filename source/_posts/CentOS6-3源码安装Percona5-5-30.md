@@ -6,7 +6,6 @@ tags: [centos,mysql,percona,安装]
 Percona 为 MySQL 数据库服务器进行了改进，在功能和性能上较 MySQL 有着很显著的提升。该版本提升了在高负载情况下的 InnoDB 的性能、为 DBA 提供一些非常有用的性能诊断工具；另外有更多的参数和命令来控制服务器行为。
 Percona（mysql）从5.5版本开始，不再使用./configure编译，而是使用cmake编译器，具体的cmake编译参数可以参考mysql官网文档,(※ 非常重要)
 http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html
-<!--more--->
 Percona-Server-5.5.30-rel30.2.tar.gz源码包下载地址：
 http://www.percona.com/redir/downloads/Percona-Server-5.5/LATEST/source/Percona-Server-5.5.30-rel30.2.tar.gz
 

@@ -35,7 +35,6 @@ Description: Git is a fast, scalable, distributed revision control system with
 [root@vm ~]# yum -y install git
 ```
 Ok，git工具安装完成，下一步下载nginx-gridfs源码包
-<!--more--->
 #### 一、安装nginx-gridfs扩展
 ```bash
 [root@vm ~]# git clone https://github.com/mdirolf/nginx-gridfs.git
